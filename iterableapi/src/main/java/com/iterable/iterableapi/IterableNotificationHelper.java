@@ -187,6 +187,12 @@ class IterableNotificationHelper {
             trampolineActivityIntent.putExtra(IterableConstants.ITERABLE_DATA_ACTION_IDENTIFIER, IterableConstants.ITERABLE_ACTION_DEFAULT);
             trampolineActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
+            PendingIntent notificationClickedIntent = PendingIntent.getActivity(context, notificationBuilder.requestCode,
+                    trampolineActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+            notificationBuilder.setContentIntent(notificationClickedIntent);
+            notificationBuilder.setIsGhostPush(isGhostPush(extras));
+
             // Action buttons
             if (notificationData.getActionButtons() != null) {
                 int buttonCount = 0;
@@ -196,12 +202,6 @@ class IterableNotificationHelper {
                         break;
                 }
             }
-
-            PendingIntent notificationClickedIntent = PendingIntent.getActivity(context, notificationBuilder.requestCode,
-                    trampolineActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-            notificationBuilder.setContentIntent(notificationClickedIntent);
-            notificationBuilder.setIsGhostPush(isGhostPush(extras));
 
             try {
                 ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
